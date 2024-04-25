@@ -1,25 +1,7 @@
 import React, { useState } from 'react'
 import { Button, Container, Row, Col, Form, Stack } from 'react-bootstrap'
 
-const TodoAdd = () => {
-  const [description, setDescription] = useState('')
-
-  async function handleAdd() {
-    try {
-      alert('todo')
-    } catch (error) {
-      console.error(error)
-    }
-  }
-
-  function handleClear() {
-    setDescription('')
-  }
-
-  const handleDescriptionChange = (event) => {
-    // todo
-  }
-
+const TodoAdd = ({ handleAdd, handleClear, handleDescriptionChange, description }) => {
   return (
     <Container>
       <h1>Add Item</h1>
@@ -38,10 +20,10 @@ const TodoAdd = () => {
       </Form.Group>
       <Form.Group as={Row} className="mb-3 offset-md-2" controlId="formAddTodoItem">
         <Stack direction="horizontal" gap={2}>
-          <Button variant="primary" onClick={() => handleAdd()}>
+          <Button variant="primary" onClick={() => handleAdd()} role="additem">
             Add Item
           </Button>
-          <Button variant="secondary" onClick={() => handleClear()}>
+          <Button variant="secondary" onClick={() => handleClear()} role="clear">
             Clear
           </Button>
         </Stack>

@@ -1,7 +1,10 @@
 import { render, screen } from '@testing-library/react'
 import TodoCard from './TodoCard'
 
-test('renders the todo card', () => {
-  render(<TodoCard />)
-  //TODO
+describe('<TodoCard />', () => {
+  test('show the todo card', () => {
+    render(<TodoCard />)
+    const todoCard = screen.getByText(/todo list app/i)
+    expect(todoCard).toBeInTheDocument()
+  })
 })

@@ -1,29 +1,12 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Button, Table } from 'react-bootstrap'
 
-const TodoList = () => {
-  const [items, setItems] = useState([])
-
-  async function getItems() {
-    try {
-      alert('todo')
-    } catch (error) {
-      console.error(error)
-    }
-  }
-
-  async function handleMarkAsComplete(item) {
-    try {
-      alert('todo')
-    } catch (error) {
-      console.error(error)
-    }
-  }
-
+const TodoList = ({ items, getItems, handleMarkAsComplete }) => {
+  const itemLength = items?.length ?? 0
   return (
     <>
       <h1>
-        Showing {items.length} Item(s){' '}
+        Showing {itemLength} Item(s){' '}
         <Button variant="primary" className="pull-right" onClick={() => getItems()}>
           Refresh
         </Button>
@@ -38,17 +21,18 @@ const TodoList = () => {
           </tr>
         </thead>
         <tbody>
-          {items.map((item) => (
-            <tr key={item.id}>
-              <td>{item.id}</td>
-              <td>{item.description}</td>
-              <td>
-                <Button variant="warning" size="sm" onClick={() => handleMarkAsComplete(item)}>
-                  Mark as completed
-                </Button>
-              </td>
-            </tr>
-          ))}
+          {items &&
+            items.map((item) => (
+              <tr key={item.id}>
+                <td>{item.id}</td>
+                <td>{item.description}</td>
+                <td>
+                  <Button variant="warning" size="sm" onClick={() => handleMarkAsComplete(item)}>
+                    Mark as completed
+                  </Button>
+                </td>
+              </tr>
+            ))}
         </tbody>
       </Table>
     </>
