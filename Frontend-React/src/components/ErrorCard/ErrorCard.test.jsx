@@ -4,7 +4,7 @@ import ErrorCard from './ErrorCard'
 describe('<ErrorCard />', () => {
   test('when rendered then show the error card', () => {
     render(<ErrorCard />)
-    const todoCard = screen.getByText(/something went wrong!/i)
-    expect(todoCard).toBeInTheDocument()
+    const errorCard = screen.getByRole('alert')
+    expect(errorCard).toBeInTheDocument()
   })
 })

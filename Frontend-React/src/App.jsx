@@ -46,7 +46,6 @@ const App = () => {
         throw new Error('Error calling the put endpoint')
       }
     }
-
     runApiCall(updateItemCallback, 'An error occured while updating your todo list.')
   }
 
@@ -83,9 +82,9 @@ const App = () => {
 
     try {
       await callback()
-      setLoading(false)
     } catch (ex) {
       setError({ message: errorMessage })
+    } finally {
       setLoading(false)
     }
   }

@@ -5,17 +5,17 @@ import TodoAdd from './TodoAdd'
 describe('<TodoAdd />', () => {
   test('when rendered then displays the description textbox', () => {
     render(<TodoAdd />)
-    const textbox = screen.getByRole('textbox')
-    expect(textbox).toBeInTheDocument()
+    const description = screen.getByRole('textbox')
+    expect(description).toBeInTheDocument()
   })
 
   test('when description entered then calls the description changed function', async () => {
     const user = userEvent.setup()
     const mockHandler = jest.fn()
     render(<TodoAdd handleDescriptionChange={mockHandler} />)
-    const textbox = screen.getByRole('textbox')
-    await user.type(textbox, 'foo')
-    expect(textbox.value).toBe('foo')
+    const description = screen.getByRole('textbox')
+    await user.type(description, 'foo')
+    expect(description.value).toBe('foo')
     expect(mockHandler).toHaveBeenCalledTimes(3)
   })
 

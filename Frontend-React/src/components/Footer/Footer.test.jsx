@@ -4,7 +4,7 @@ import Footer from './Footer'
 describe('<Footer />', () => {
   test('when rendered then displays the footer text', () => {
     render(<Footer />)
-    const footerElement = screen.getByText(/clearpoint.digital/i)
-    expect(footerElement).toBeInTheDocument()
+    const footer = screen.getByText(/© 2021 copyright:/i)
+    expect(footer).toBeInTheDocument()
   })
 })

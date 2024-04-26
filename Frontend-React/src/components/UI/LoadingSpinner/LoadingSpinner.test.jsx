@@ -10,7 +10,7 @@ describe('<LoadingSpinner />', () => {
 
   test('when rendered then shows spinner message', () => {
     render(<LoadingSpinner message="test message" />)
-    const spinner = screen.getByText(/test message/i)
-    expect(spinner).toBeInTheDocument()
+    const spinner = screen.getByRole('button')
+    expect(spinner).toHaveTextContent('test message')
   })
 })
