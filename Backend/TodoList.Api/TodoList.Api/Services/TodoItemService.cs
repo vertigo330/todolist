@@ -47,7 +47,7 @@ public class TodoItemService : ITodoItemService
 
     public async Task<Guid> AddTodoItemAsync(TodoItemDto todoItemDto, CancellationToken cancellationToken)
     {
-        if (string.IsNullOrEmpty(todoItemDto?.Description))
+        if (string.IsNullOrWhiteSpace(todoItemDto?.Description))
         {
             throw new TodoValidationException("Description is required");
         }
@@ -62,8 +62,8 @@ public class TodoItemService : ITodoItemService
             Description = todoItemDto.Description,
             IsCompleted = todoItemDto.IsCompleted
         };
-        await _itemRepository.AddTodoItemAsync(todoItem, cancellationToken);
-        return todoItem.Id;
+        var inserted = await _itemRepository.AddTodoItemAsync(todoItem, cancellationToken);
+        return inserted.Id;
     }
 
     public async Task UpdateTodoItemAsync(Guid id, TodoItemDto todoItemDto, CancellationToken cancellationToken)
