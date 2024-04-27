@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
+using TodoList.Api.Exceptions;
+using TodoList.Api.Models.Dto;
+using TodoList.Api.Services;
 
 namespace TodoList.Api.Controllers
 {
@@ -13,62 +13,78 @@ namespace TodoList.Api.Controllers
     [ApiController]
     public class TodoItemsController : ControllerBase
     {
-        private readonly TodoContext _context;
+        //NOTE: We could have use something like MediatR to slim down the controllers but I oped for simple service injection instead
+        private readonly ITodoItemService _itemService;
         private readonly ILogger<TodoItemsController> _logger;
 
-        public TodoItemsController(TodoContext context, ILogger<TodoItemsController> logger)
+        public TodoItemsController(ITodoItemService itemService, ILogger<TodoItemsController> logger)
         {
-            _context = context;
-            _logger = logger;
+            _itemService = itemService ?? throw new ArgumentNullException(nameof(itemService));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
         // GET: api/TodoItems
         [HttpGet]
-        public async Task<IActionResult> GetTodoItems()
+        public async Task<IActionResult> GetTodoItems(CancellationToken cancellationToken = default)
         {
-            var results = await _context.TodoItems.Where(x => !x.IsCompleted).ToListAsync();
-            return Ok(results);
+            try
+            {
+                var results = await _itemService.GetIncompleteTodoItemsAsync(cancellationToken);
+                return Ok(results);
+            }
+            catch (Exception ex)
+            {
+                //Unhandled returns 500 internal server error
+                _logger.LogError(ex, "Error getting the todo items");
+                return StatusCode(500);
+            }
         }
 
         // GET: api/TodoItems/...
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetTodoItem(Guid id)
+        public async Task<IActionResult> GetTodoItem(Guid id, CancellationToken cancellationToken = default)
         {
-            var result = await _context.TodoItems.FindAsync(id);
-
-            if (result == null)
+            try
             {
-                return NotFound();
-            }
+                var result = await _itemService.GetTodoItemAsync(id, cancellationToken);
 
-            return Ok(result);
+                if (result == null)
+                {
+                    return NotFound();
+                }
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                //Unhandled returns 500 internal server error
+                _logger.LogError(ex, "Error getting the todo item");
+                return StatusCode(500);
+            }
         }
 
         // PUT: api/TodoItems/... 
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutTodoItem(Guid id, TodoItem todoItem)
+        public async Task<IActionResult> PutTodoItem(Guid id, TodoItemDto todoItem, CancellationToken cancellationToken = default)
         {
-            if (id != todoItem.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(todoItem).State = EntityState.Modified;
-
             try
             {
-                await _context.SaveChangesAsync();
+                await _itemService.UpdateTodoItemAsync(id, todoItem, cancellationToken);
             }
-            catch (DbUpdateConcurrencyException)
+            catch (MismatchedIdException ex)
             {
-                if (!TodoItemIdExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                _logger.LogError(ex, "Error updating the todo item");
+                return BadRequest(ex.Message);
+            }
+            catch (TodoItemNotFoundException ex)
+            {
+                _logger.LogError(ex, "Error updating the todo item");
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                //Unhandled returns 500 internal server error
+                _logger.LogError(ex, "Error updating the todo item");
+                return StatusCode(500);
             }
 
             return NoContent();
@@ -76,32 +92,24 @@ namespace TodoList.Api.Controllers
 
         // POST: api/TodoItems 
         [HttpPost]
-        public async Task<IActionResult> PostTodoItem(TodoItem todoItem)
+        public async Task<IActionResult> PostTodoItem(TodoItemDto todoItem, CancellationToken cancellationToken = default)
         {
-            if (string.IsNullOrEmpty(todoItem?.Description))
+            try
             {
-                return BadRequest("Description is required");
+                var id = await _itemService.AddTodoItemAsync(todoItem, cancellationToken);
+                return CreatedAtAction(nameof(GetTodoItem), new { id }, todoItem);
             }
-            else if (TodoItemDescriptionExists(todoItem.Description))
+            catch (TodoValidationException ex)
             {
-                return BadRequest("Description already exists");
-            } 
-
-            _context.TodoItems.Add(todoItem);
-            await _context.SaveChangesAsync();
-             
-            return CreatedAtAction(nameof(GetTodoItem), new { id = todoItem.Id }, todoItem);
+                _logger.LogError(ex, "Error inserting the todo item");
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                //Unhandled returns 500 internal server error
+                _logger.LogError(ex, "Error inserting the todo item");
+                return StatusCode(500);
+            }
         } 
-
-        private bool TodoItemIdExists(Guid id)
-        {
-            return _context.TodoItems.Any(x => x.Id == id);
-        }
-
-        private bool TodoItemDescriptionExists(string description)
-        {
-            return _context.TodoItems
-                   .Any(x => x.Description.ToLowerInvariant() == description.ToLowerInvariant() && !x.IsCompleted);
-        }
     }
 }
