@@ -5,6 +5,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using TodoList.Api.Repositories;
+using TodoList.Api.Services;
 
 namespace TodoList.Api
 {
@@ -38,6 +40,8 @@ namespace TodoList.Api
             });
 
             services.AddDbContext<TodoContext>(opt => opt.UseInMemoryDatabase("TodoItemsDB"));
+            services.AddScoped<ITodoItemRepository, TodoItemRepository>();
+            services.AddScoped<ITodoItemService, TodoItemService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -54,6 +58,7 @@ namespace TodoList.Api
 
             app.UseRouting();
 
+            //NOTE: Sketchy
             app.UseCors("AllowAllHeaders");
 
             app.UseAuthorization();
