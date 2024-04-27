@@ -14,9 +14,7 @@ namespace TodoList.Api.Services;
 public class TodoItemService : ITodoItemService
 {
     private readonly ITodoItemRepository _itemRepository;
-
-    //TODO: Cancellation token?
-
+    
     public TodoItemService(ITodoItemRepository itemRepository)
     {
         _itemRepository = itemRepository ?? throw new ArgumentNullException(nameof(itemRepository));
