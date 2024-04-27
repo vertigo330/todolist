@@ -9,14 +9,14 @@ describe('<TodoAdd />', () => {
     expect(description).toBeInTheDocument()
   })
 
-  test('when description entered then calls the description changed function', async () => {
+  test('when description is changed then calls the changed function', async () => {
     const user = userEvent.setup()
     const mockHandler = jest.fn()
     render(<TodoAdd handleDescriptionChange={mockHandler} />)
     const description = screen.getByRole('textbox')
     await user.type(description, 'foo')
     expect(description.value).toBe('foo')
-    expect(mockHandler).toHaveBeenCalledTimes(3)
+    expect(mockHandler).toHaveBeenCalledTimes('foo'.length)
   })
 
   test('when rendered then shows the Add Item button', () => {

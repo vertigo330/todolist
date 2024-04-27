@@ -6,7 +6,7 @@ import App from './App'
 
 describe('<App />', () => {
   describe('when rendered', () => {
-    test('then the todo list is populated with rows', async () => {
+    test('then the todo list is asynchronously populated with rows', async () => {
       render(<App />)
       await waitFor(() => {
         const list = screen.getAllByRole('row')
@@ -14,7 +14,7 @@ describe('<App />', () => {
       })
     })
 
-    test('and an error occures then the error message is shown', async () => {
+    test('and an error occures then an error message is displayed', async () => {
       //Override the mws hander here to return an error response
       server.resetHandlers(
         rest.get('https://localhost:5001/api/todoitems', (req, res, ctx) => {
@@ -46,6 +46,16 @@ describe('<App />', () => {
         additem.click()
         const spinner = await screen.findByText('Working on it...')
         expect(spinner).toBeVisible()
+      })
+
+      test('and the Clear button is clicked then clears the description', async () => {
+        const user = userEvent.setup()
+        render(<App />)
+        const textbox = screen.getByPlaceholderText('Enter description...', { selector: 'input' })
+        user.type(textbox, 'foo')
+        const clear = screen.getByRole('clear')
+        clear.click()
+        expect(textbox).toHaveValue('')
       })
     })
   })
