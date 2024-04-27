@@ -23,3 +23,4 @@
 - Introduce a new todo item DTO so that EF models dont cross the service boundary
 - Write some unit tests, mock using MOQ
 - Make sure that internal exception messages are never returned to the client, but logged instead
+- The API is not secured, but sorting that out that seemed a little out of scope

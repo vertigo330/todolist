@@ -9,6 +9,7 @@ using TodoList.Api.Services;
 
 namespace TodoList.Api.Controllers
 {
+    //NOTE: These are unsecured endpoints
     [Route("api/[controller]")]
     [ApiController]
     public class TodoItemsController : ControllerBase
