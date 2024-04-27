@@ -24,12 +24,13 @@ const App = () => {
       var response = await fetch('https://localhost:5001/api/todoitems')
 
       if (!response.ok) {
-        throw new Error('Error calling the get endpoint')
+        const errorMessage = await response.text()
+        throw new Error(`An error occured while loading your todo list. Error detail: ${errorMessage}`)
       }
       const items = await response.json()
       setItems(items)
     }
-    runApiCall(getItemsCallback, 'An error occured while loading your todo list.')
+    runApiCall(getItemsCallback)
   }
 
   const handleMarkAsComplete = async (item) => {
@@ -43,10 +44,11 @@ const App = () => {
       })
 
       if (!response.ok) {
-        throw new Error('Error calling the put endpoint')
+        const errorMessage = await response.text()
+        throw new Error(`An error occured while updating your todo list. Error detail: ${errorMessage}`)
       }
     }
-    runApiCall(updateItemCallback, 'An error occured while updating your todo list.')
+    runApiCall(updateItemCallback)
   }
 
   const handleAdd = async () => {
@@ -60,12 +62,13 @@ const App = () => {
       })
 
       if (!response.ok) {
-        throw new Error('Error calling the post endpoint')
+        const errorMessage = await response.text()
+        throw new Error(`An error occured while adding todo. Error detail: ${errorMessage}`)
       }
       setDescription('')
     }
 
-    runApiCall(addItemCallback, 'An error occured while adding todo.')
+    runApiCall(addItemCallback)
   }
 
   const handleClear = () => {
@@ -76,14 +79,14 @@ const App = () => {
     setDescription(event.target.value)
   }
 
-  const runApiCall = async (callback, errorMessage) => {
+  const runApiCall = async (callback) => {
     setError()
     setLoading(true)
 
     try {
       await callback()
     } catch (ex) {
-      setError({ message: errorMessage })
+      setError({ message: ex.message })
     } finally {
       setLoading(false)
     }
