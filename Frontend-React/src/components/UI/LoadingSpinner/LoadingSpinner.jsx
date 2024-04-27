@@ -1,11 +1,12 @@
-import { Button, Alert, Spinner } from 'react-bootstrap'
+import { Modal } from 'react-bootstrap'
 
-const LoadingSpinner = ({ message }) => {
+const LoadingSpinner = ({ message, show }) => {
   return (
-    <Button variant="primary" disabled>
-      <Spinner as="span" animation="grow" size="sm" role="status" aria-hidden="true" />
-      {message}
-    </Button>
+    <Modal size="sm" show={show} aria-labelledby="modal-sizes-title-sm" role="modal">
+      <Modal.Header>
+        <Modal.Title id="modal-sizes-title-sm">{message}</Modal.Title>
+      </Modal.Header>
+    </Modal>
   )
 }
 

@@ -94,6 +94,7 @@ const App = () => {
 
   return (
     <div className={classes.App}>
+      <LoadingSpinner show={loading} message="Working on it..." />
       <Container>
         <Row>
           <Col>
@@ -102,9 +103,11 @@ const App = () => {
         </Row>
         <Row>
           <Col>
-            {error && <ErrorCard message={error.message} />}
             <TodoCard />
           </Col>
+        </Row>
+        <Row>
+          <Col>{error && <ErrorCard message={error.message} />}</Col>
         </Row>
         <Row>
           <Col>
@@ -114,7 +117,6 @@ const App = () => {
               handleDescriptionChange={handleDescriptionChange}
               description={description}
             />
-            {loading && <LoadingSpinner message="Working on it..." />}
           </Col>
         </Row>
         <br />

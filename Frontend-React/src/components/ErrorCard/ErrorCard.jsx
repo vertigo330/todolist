@@ -1,9 +1,8 @@
-import classes from './ErrorCard.module.css'
 import Card from '../UI/Card/Card'
 
 const ErrorCard = ({ message }) => {
   return (
-    <Card heading="Something went wrong!" subHeading=":-(" type="danger">
+    <Card heading="Something went wrong :-(" type="danger">
       {message}
     </Card>
   )

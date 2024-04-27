@@ -8,9 +8,9 @@ describe('<Card />', () => {
     expect(card).toBeInTheDocument()
   })
 
-  test('when rendered then shows sub-heading section', () => {
-    render(<Card subHeading="test sub-heading" />)
-    const card = screen.getByText(/test sub-heading/i)
+  test('when rendered then shows children', () => {
+    render(<Card>test children</Card>)
+    const card = screen.getByText(/test children/i)
     expect(card).toBeInTheDocument()
   })
 })
