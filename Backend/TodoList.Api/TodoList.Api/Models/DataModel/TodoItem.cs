@@ -1,6 +1,6 @@
-using System;
+﻿using System;
 
-namespace TodoList.Api
+namespace TodoList.Api.Models.DataModel
 {
     public class TodoItem
     {
