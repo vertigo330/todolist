@@ -1,6 +1,6 @@
 {
-  "short_name": "ClearPoint",
-  "name": "ClearPoint Technical Interview",
+  "short_name": "TodoList",
+  "name": "ToDo List",
   "icons": [
     {
       "src": "favicon.ico",

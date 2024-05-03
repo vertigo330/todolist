@@ -5,18 +5,16 @@ const TodoCard = () => {
   return (
     <Card
       heading="Todo List App"
-      subHeading="Welcome to the ClearPoint frontend technical test. We like to keep things simple, yet clean so your task(s) are as follows:"
+      subHeading="Welcome to the Todo List application. Features include:"
       type="success"
     >
       <ol className={classes['list-left']}>
         <li>Add the ability to add (POST) a Todo Item by calling the backend API</li>
         <li>Display (GET) all the current Todo Items in the below grid and display them in any order you wish</li>
-        <li>
-          Bonus points for completing the 'Mark as completed' button code for allowing users to update and mark a
-          specific Todo Item as completed and for displaying any relevant validation errors/ messages from the API in
+        <li>'Mark as completed' button code for allowing users to update and mark a specific Todo Item as completed and for displaying any relevant validation errors/ messages from the API in
           the UI
         </li>
-        <li>Feel free to add unit tests and refactor the component(s) as best you see fit</li>
+        <li>Unit tests</li>
       </ol>
     </Card>
   )
